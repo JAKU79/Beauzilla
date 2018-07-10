@@ -11,7 +11,7 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // ==/UserScript==
 
-// Pokus 2
+// Pokus 3
 
 console.time();
 
