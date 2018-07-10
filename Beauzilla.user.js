@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beauzilla
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Stylování Bugzilly
 // @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
@@ -11,7 +11,7 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // ==/UserScript==
 
-// Pokus 3
+// Pokus 4
 
 console.time();
 
