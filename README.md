@@ -1,5 +1,13 @@
+POPIS
+-----
+Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Documentation. Je určený pro doplněk Tampermonkey. 
+
+ZMĚNY
+-----
 1.0.1
-- refaktorizace kódu
+- refaktorizace kódu pro součty tagů
+- odstranění zbytečných komentů
+- odstranění počítadla rychlosti skriptu
 
 1.0.0
 - nastavena pevné šířka těla
