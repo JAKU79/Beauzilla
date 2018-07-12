@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beauzilla
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  Stylování Bugzilly
 // @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
@@ -11,14 +11,12 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // ==/UserScript==
 
-console.time();
-
 // *** funkce pro blikání textu ***
 function blink_text() {
-    $('.blink').fadeOut(200);
-    $('.blink').fadeIn(200);
+    $('.blink').fadeOut(500);
+    $('.blink').fadeIn(500);
 }
-setInterval(blink_text, 500);
+setInterval(blink_text, 1000);
 
 // *** Barva horní položky Status ***
 if( $( "span#static_bug_status:contains('VERIFIED')" ).length > 0) {
@@ -35,7 +33,6 @@ $( "span:contains('tohelp')" ).parent().parent().css( "background-color", "light
 $( "span:contains('inhelp')" ).css( "background-color", "#cdf2ba" );
 
 // *** Zobrazuje ikony pro keywordy L10N_SK, L10N_CZ, L10N_CH, Reviewed, Published, InHelp a HelpInProcess. ***
-// Nový kód je, zdá se, rychlejší s přibývajícím počtem nalezených keywordů.
 function oKey(keyword, icon, height, width) {
     this.keyword = keyword;
     this.icon = icon;
@@ -102,7 +99,6 @@ var lenFlagValue = arrFlagValue.length;
 var k;
 var l;
 
-// Zapřemýšlet, jestli by se změna názvu flagu nedala vyřešit přes metodu...
 for (l = 0; l < lenFlag ; l++) {
 	for (k = 0; k < lenFlagValue ; k++) {
 		$("option[value=\"" + arrFlagValue[k].value + "\"][selected]:contains(\"" + arrFlagValue[k].value + "\")").parent().parent().prev().children( "label:contains(\"" + arrFlag[l] + "\")" ).css({"color": arrFlagValue[k].color, "font-weight": "bold"});
@@ -138,9 +134,8 @@ $( "div#footer li#links-actions").css({"font-weight": "bold"});
 var sumCom = $(".bz_comment").length - 1;
 var sumComInHelp = $("span.bz_comment_tag:contains('inhelp')").length;
 var sumComToHelp = $("span.bz_comment_tag:contains('tohelp')").length;
-var sumComHelp = $(".bz_default_collapsed:contains('help')").length; // snad ok, ale lepší by bylo použít přesný match přes .filter(). Potíž by např. nastala, pokud by se řádek skryl tagem test a ještě tam byl např. tag inhelp.
+var sumComHelp = $(".bz_default_collapsed:contains('help')").length;
 
-// Možná by šlo řešit smyčkou...
 $( "div.outro").after( "<ul class='ComBold' ><li id='bz_comment' >Comments: " + sumCom + "</li>");
 $( "#bz_comment").after( "<li id='hhelp' >Help: <span class='chhelp'>" + sumComHelp + "</span></li>" );
 $( "#hhelp").after( "<li id='ToHelp' >ToHelp: <span class='ctohelp'>" + sumComToHelp + "</span></li>" );
@@ -148,19 +143,22 @@ $( "#ToHelp").after( "<li id='InHelp' >InHelp: <span class='cinhelp'>" + sumComI
 
 $( ".ComBold" ).css({"color": "black", "padding-left": "5px", "font-weight": "bold"});
 
-// Možná by šlo řešit smyčkou...
-if (sumComToHelp > 0) {
-	$( ".ctohelp" ).addClass( "blink" ).css({"color": "red"});
+function oSum(sumKey, sumClass, sumBlinkClass) {
+    this.sumKey = sumKey;
+    this.sumClass = sumClass;
+	this.sumBlinkClass = sumBlinkClass;
 };
 
-if (sumComHelp > 0) {
-	$( ".chhelp" ).addClass( "blink" ).css({"color": "red"});
-};
+var mySum1 = new oSum(sumComToHelp, ".ctohelp", "blink");
+var mySum2 = new oSum(sumComHelp, ".chhelp", "blink");
+var mySum3 = new oSum(sumComInHelp, ".cinhelp", "");
 
-if (sumComInHelp > 0) {
-	$( ".cinhelp" ).css({"color": "#red"});
-};
+var arrSum = [mySum1, mySum2, mySum3];
+var lenSum = arrSum.length;
+var m;
 
-// *** Tlačítka pro skok na začátek a na konec stránky ***
-// ...
-console.timeEnd();
+for (m = 0; m < lenSum; m++) {
+	if (arrSum[m].sumKey > 0) {
+		$( arrSum[m].sumClass ).addClass( arrSum[m].sumBlinkClass ).css({"color": "red"});
+	};
+};
