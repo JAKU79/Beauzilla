@@ -1,3 +1,6 @@
+1.0.1
+- refaktorizace kódu
+
 1.0.0
 - nastavena pevné šířka těla
 - odstraněna hlavička (všechny linky jsou v \"patičce\", takže akorát zabírala místo)
