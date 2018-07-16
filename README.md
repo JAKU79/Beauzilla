@@ -4,6 +4,9 @@ Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Docu
 
 ZMĚNY
 -----
+1.0.3
+- refaktorizace kódu
+
 1.0.2
 - doplnění semaforu k bugům v See Also. Zelený, pokud obsahuje keyword InHelp, červený, pokud neobsahuje.
 - refaktorizace kódu barvy commentů
