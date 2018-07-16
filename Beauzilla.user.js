@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beauzilla
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      1.0.3
 // @description  Stylování Bugzilly
 // @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
@@ -198,12 +198,9 @@ function isKeywordFull(bug, keyword) {
 	});
 };
 
-var x;
-var lenAjaxHook = $("#field_container_see_also ul li a").length;
-
 // *** Semafory u bugů v See Also
-for (x = 0; x < lenAjaxHook; x++) {
-	var myBug = $("#field_container_see_also ul li:eq(" + x + ") a").text();
-	$("#field_container_see_also ul li:eq(" + x + ") a").attr("id", myBug);
-	isKeywordFull( myBug, "InHelp" );
-};
+$( "#field_container_see_also ul li a" ).each(function() {
+  		var myBug = $( this ).text();
+		$( this ).attr("id", myBug);
+		isKeywordFull( myBug, "InHelp" );
+});
