@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beauzilla
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Stylování Bugzilly
 // @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
@@ -15,7 +15,8 @@
 function blink_text() {
     $('.blink').fadeOut(500);
     $('.blink').fadeIn(500);
-}
+};
+
 setInterval(blink_text, 1000);
 
 // *** Barva horní položky Status ***
@@ -26,8 +27,8 @@ if( $( "span#static_bug_status:contains('VERIFIED')" ).length > 0) {
 };
 
 // *** Barví komentáře, které mají tagy help nebo tohelp. ***
-$( "span:contains('Comment hidden (help)')" ).parent().parent().css( "background-color", "khaki" );
-$( "span:contains('tohelp')" ).parent().parent().css( "background-color", "lightblue" );
+$( "span:contains('Comment hidden (help)')" ).parents( ".bz_comment" ).css( "background-color", "khaki" );
+$( "span:contains('tohelp')" ).parents( ".bz_comment" ).css( "background-color", "lightblue" );
 
 // *** Barví tag inhelp. ***
 $( "span:contains('inhelp')" ).css( "background-color", "#cdf2ba" );
@@ -136,7 +137,7 @@ var sumComInHelp = $("span.bz_comment_tag:contains('inhelp')").length;
 var sumComToHelp = $("span.bz_comment_tag:contains('tohelp')").length;
 var sumComHelp = $(".bz_default_collapsed:contains('help')").length;
 
-$( "div.outro").after( "<ul class='ComBold' ><li id='bz_comment' >Comments: " + sumCom + "</li>");
+$( "div.outro").after( "<ul class='ComBold' id='mySum' ><li id='bz_comment' >Comments: " + sumCom + "</li>");
 $( "#bz_comment").after( "<li id='hhelp' >Help: <span class='chhelp'>" + sumComHelp + "</span></li>" );
 $( "#hhelp").after( "<li id='ToHelp' >ToHelp: <span class='ctohelp'>" + sumComToHelp + "</span></li>" );
 $( "#ToHelp").after( "<li id='InHelp' >InHelp: <span class='cinhelp'>" + sumComInHelp + "</span></li></ul>" );
@@ -161,4 +162,48 @@ for (m = 0; m < lenSum; m++) {
 	if (arrSum[m].sumKey > 0) {
 		$( arrSum[m].sumClass ).addClass( arrSum[m].sumBlinkClass ).css({"color": "red"});
 	};
+};
+
+// *** Tlačítka pro skok na začátek a na konec stránky ***
+function toBottom() {
+	var scrollingElement = (document.scrollingElement || document.body);
+	scrollingElement.scrollTop = scrollingElement.scrollHeight;
+};
+
+function toTop() {
+	$(window).scrollTop(0);
+};
+
+$( "#InHelp").after( "<div id='toTop'><img class='myButton' src='https://help.abra.eu/icons/arrow_up.png'></img></div>" );
+$( "#toTop" ).on("click", toTop);
+
+$( "#toTop").after( "<div id='toBottom'><img class='myButton' src='https://help.abra.eu/icons/arrow_down.png'></img></div>" );
+$( "#toBottom" ).on("click", toBottom);
+
+$( ".myButton" ).css({"border": "1px solid grey", "padding": "3px", "margin": "5px 5px 5px 0px", "font-weight": "", "width": "20px", "color": "black", "float": "left"});
+
+// *** AJAX ***
+// Funkce pro označení elementu s id čísla bugu, pokud obsahuje požadovaný keyword
+function isKeywordFull(bug, keyword) {
+		$('<div>').load("https://bugzilla.abra.eu/show_bug.cgi?id=" + bug + " #keywords", function(){
+		var myAjaxKeywords = $(this).children().val();
+		var re = /\s*,\s*/;
+		var myKeyArr = myAjaxKeywords.split(re);
+		var n = myKeyArr.includes(keyword);
+		if (n == true) {
+			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/green_dot.png'></img>" );
+		} else {
+			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/red_dot.png'></img>" );
+		};
+	});
+};
+
+var x;
+var lenAjaxHook = $("#field_container_see_also ul li a").length;
+
+// *** Semafory u bugů v See Also
+for (x = 0; x < lenAjaxHook; x++) {
+	var myBug = $("#field_container_see_also ul li:eq(" + x + ") a").text();
+	$("#field_container_see_also ul li:eq(" + x + ") a").attr("id", myBug);
+	isKeywordFull( myBug, "InHelp" );
 };
