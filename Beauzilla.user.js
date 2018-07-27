@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beauzilla
 // @namespace    http://tampermonkey.net/
-// @version      1.0.3
+// @version      1.0.4
 // @description  Stylování Bugzilly
 // @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
@@ -11,7 +11,6 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // ==/UserScript==
 
-// *** funkce pro blikání textu ***
 function blink_text() {
     $('.blink').fadeOut(500);
     $('.blink').fadeIn(500);
@@ -54,7 +53,7 @@ var lenKey = arrKey.length;
 var i;
 
 for (i = 0; i < lenKey ; i++) {
-	$( "input[value*=" + arrKey[i].keyword + "]" ).parents(':eq(1)')
+	$( "#keywords_container input[value*=" + arrKey[i].keyword + "]" ).parents(':eq(1)')
 		.after( "<td valign=\"bottom\"style=\"padding-left:5px;width:20px\"><img src=\"https://help.abra.eu/icons/"
 			   + arrKey[i].icon + "\" height=\""
 			   + arrKey[i].height + "\" width=\""
@@ -135,7 +134,10 @@ $( "div#footer li#links-actions").css({"font-weight": "bold"});
 var sumCom = $(".bz_comment").length - 1;
 var sumComInHelp = $("span.bz_comment_tag:contains('inhelp')").length;
 var sumComToHelp = $("span.bz_comment_tag:contains('tohelp')").length;
-var sumComHelp = $(".bz_default_collapsed:contains('help')").length;
+var sumComHelp = $("span.bz_comment_tag").filter(function () {
+    return this.innerHTML.match(/\bhelp\b/);
+	})
+	.length;
 
 $( "div.outro").after( "<ul class='ComBold' id='mySum' ><li id='bz_comment' >Comments: " + sumCom + "</li>");
 $( "#bz_comment").after( "<li id='hhelp' >Help: <span class='chhelp'>" + sumComHelp + "</span></li>" );
@@ -183,24 +185,45 @@ $( "#toBottom" ).on("click", toBottom);
 $( ".myButton" ).css({"border": "1px solid grey", "padding": "3px", "margin": "5px 5px 5px 0px", "font-weight": "", "width": "20px", "color": "black", "float": "left"});
 
 // *** AJAX ***
-// Funkce pro označení elementu s id čísla bugu, pokud obsahuje požadovaný keyword
 function isKeywordFull(bug, keyword) {
-		$('<div>').load("https://bugzilla.abra.eu/show_bug.cgi?id=" + bug + " #keywords", function(){
-		var myAjaxKeywords = $(this).children().val();
-		var re = /\s*,\s*/;
-		var myKeyArr = myAjaxKeywords.split(re);
-		var n = myKeyArr.includes(keyword);
-		if (n == true) {
-			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/green_dot.png'></img>" );
+		$('<div>').load("https://bugzilla.abra.eu/show_bug.cgi?id=" + bug + " #bugzilla-body", function(){
+		var myStatus = $(this).find( "#static_bug_status").text();
+		var myKeywords = $(this).find( "#keywords").val();
+		var myToHelp = $(this).find( "select[title^='Zda se má zveřejnit do helpu'] > option[selected='']" ).text();
+		var isVerified = myStatus.includes("VERIFIED");
+		var isWontfix = myStatus.includes("WONTFIX");
+		var isInvalid = myStatus.includes("INVALID");
+		var isDuplicate = myStatus.includes("DUPLICATE");
+		var isInHelp = myKeywords.includes("InHelp");
+		if (isVerified == true) {
+			if (myToHelp == "+") {
+				if (isInHelp == true) {
+					$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/check_mark_standard.png'></img>" )
+				} else {
+					$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/green_dot.png'></img>" )
+				};
+			} else if (myToHelp == "-") {
+				$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross_green.png'></img>" )
+			} else if (myToHelp == "?") {
+				$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/questionmark.png'></img>" )
+			} else if (myToHelp == "") {
+				$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/questionmark.png'></img>" )
+			};
+		} else if (isWontfix == true) {
+			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross.png'></img>" );
+		} else if (isInvalid == true) {
+			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross.png'></img>" );
+		} else if (isDuplicate == true) {
+			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross.png'></img>" );
 		} else {
 			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/red_dot.png'></img>" );
 		};
 	});
 };
 
-// *** Semafory u bugů v See Also
 $( "#field_container_see_also ul li a" ).each(function() {
   		var myBug = $( this ).text();
 		$( this ).attr("id", myBug);
+		console.log( myBug );
 		isKeywordFull( myBug, "InHelp" );
 });
