@@ -4,6 +4,10 @@ Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Docu
 
 ZMĚNY
 -----
+1.0.4
+- AJAX: doplněny symboly pro všechny relevantní stavy bugů z pohledu dokumentace. Zatím jen v sekci See Also.
+- opravena chyba v součtu sumComHelp
+
 1.0.3
 - refaktorizace kódu
 
