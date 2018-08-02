@@ -3,8 +3,8 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0.0
 // @description  Stylování stromu Bugzilly
-// @updateURL    https://github.com/JAKU79/Beauzilla/variants/raw/master/BeauzillaTree.user.js
-// @downloadURL  https://github.com/JAKU79/Beauzilla/variants/raw/master/BeauzillaTree.user.js
+// @updateURL    https://github.com/JAKU79/Beauzilla/variants/BeauzillaTree/raw/master/BeauzillaTree.user.js
+// @downloadURL  https://github.com/JAKU79/Beauzilla/variants/BeauzillaTree/raw/master/BeauzillaTree.user.js
 // @author       Jan Kusák
 // @grant        none
 // @match        https://bugzilla.abra.eu/showdependencytree.cgi*
