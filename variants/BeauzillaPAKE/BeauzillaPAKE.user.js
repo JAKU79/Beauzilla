@@ -3,8 +3,8 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0.0
 // @description  Stylování Bugzilly pro PAKE
-// @updateURL    https://github.com/JAKU79/Beauzilla/variants/raw/master/BeauzillaPAKE.user.js
-// @downloadURL  https://github.com/JAKU79/Beauzilla/variants/raw/master/BeauzillaPAKE.user.js
+// @updateURL    https://github.com/JAKU79/Beauzilla/variants/BeauzillaPAKE/raw/master/BeauzillaPAKE.user.js
+// @downloadURL  https://github.com/JAKU79/Beauzilla/variants/BeauzillaPAKE/raw/master/BeauzillaPAKE.user.js
 // @author       Jan Kusák
 // @grant        none
 // @match        https://bugzilla.abra.eu/show_bug.cgi*
