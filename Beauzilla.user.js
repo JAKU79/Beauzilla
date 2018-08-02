@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beauzilla
 // @namespace    http://tampermonkey.net/
-// @version      1.0.4
+// @version      1.0.5
 // @description  Stylování Bugzilly
 // @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
@@ -11,19 +11,12 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // ==/UserScript==
 
-function blink_text() {
-    $('.blink').fadeOut(500);
-    $('.blink').fadeIn(500);
-};
-
-setInterval(blink_text, 1000);
-
 // *** Barva horní položky Status ***
 if( $( "span#static_bug_status:contains('VERIFIED')" ).length > 0) {
     $( "span#static_bug_status" ).css({"color": "#17984e", "font-weight": "bold"});
 } else {
     $( "span#static_bug_status" ).css({"color": "red", "font-weight": "bold"});
-};
+}
 
 // *** Barví komentáře, které mají tagy help nebo tohelp. ***
 $( "span:contains('Comment hidden (help)')" ).parents( ".bz_comment" ).css( "background-color", "khaki" );
@@ -38,7 +31,7 @@ function oKey(keyword, icon, height, width) {
     this.icon = icon;
     this.height = height;
     this.width = width;
-};
+}
 
 var myKey1 = new oKey("L10N_SK", "Flag_of_Slovakia.svg", 15, 20);
 var myKey2 = new oKey("L10N_CZ", "Flag_of_the_Czech_Republic.svg", 15, 20);
@@ -58,13 +51,13 @@ for (i = 0; i < lenKey ; i++) {
 			   + arrKey[i].icon + "\" height=\""
 			   + arrKey[i].height + "\" width=\""
 			   + arrKey[i].width + "\"></td>" );
-};
+}
 
 // *** Barva borderů položky Typ ***
 function oType(type, color) {
     this.type = type;
     this.color = color;
-};
+}
 
 var myType1 = new oType("Error (chyba)", "#ff9933");
 var myType2 = new oType("---", "#ff0000");
@@ -78,13 +71,13 @@ var j;
 
 for (j = 0; j < lenType ; j++) {
 	$("#cf_statistictype option[value=\"" + arrType[j].type + "\"][selected='selected']").parent().css({"border-color": arrType[j].color, "border-width": "2px"});
-};
+}
 
 // *** Barva textu pro flag ToHelp a ToPubl v závislosti na hodnotě ***
 function oFlagValue(value, color) {
 	this.value = value;
 	this.color = color;
-};
+}
 
 var myFlagValue1 = new oFlagValue("+", "#009933");
 var myFlagValue2 = new oFlagValue("-", "red");
@@ -103,7 +96,7 @@ for (l = 0; l < lenFlag ; l++) {
 	for (k = 0; k < lenFlagValue ; k++) {
 		$("option[value=\"" + arrFlagValue[k].value + "\"][selected]:contains(\"" + arrFlagValue[k].value + "\")").parent().parent().prev().children( "label:contains(\"" + arrFlag[l] + "\")" ).css({"color": arrFlagValue[k].color, "font-weight": "bold"});
 	};
-};
+}
 
 // *** footer s uloženými definicemi hledání je umístěn po leve straně jako plovoucí ***
 $( "#footer" ).css({"position":"fixed", "top": "0px", "width": "300px"});
@@ -150,7 +143,15 @@ function oSum(sumKey, sumClass, sumBlinkClass) {
     this.sumKey = sumKey;
     this.sumClass = sumClass;
 	this.sumBlinkClass = sumBlinkClass;
-};
+}
+
+// *** funkce pro blikání textu ***
+function blink_text() {
+    $('.blink').fadeOut(500);
+    $('.blink').fadeIn(500);
+}
+
+setInterval(blink_text, 1000);
 
 var mySum1 = new oSum(sumComToHelp, ".ctohelp", "blink");
 var mySum2 = new oSum(sumComHelp, ".chhelp", "blink");
@@ -164,17 +165,17 @@ for (m = 0; m < lenSum; m++) {
 	if (arrSum[m].sumKey > 0) {
 		$( arrSum[m].sumClass ).addClass( arrSum[m].sumBlinkClass ).css({"color": "red"});
 	};
-};
+}
 
 // *** Tlačítka pro skok na začátek a na konec stránky ***
 function toBottom() {
 	var scrollingElement = (document.scrollingElement || document.body);
 	scrollingElement.scrollTop = scrollingElement.scrollHeight;
-};
+}
 
 function toTop() {
 	$(window).scrollTop(0);
-};
+}
 
 $( "#InHelp").after( "<div id='toTop'><img class='myButton' src='https://help.abra.eu/icons/arrow_up.png'></img></div>" );
 $( "#toTop" ).on("click", toTop);
@@ -184,9 +185,17 @@ $( "#toBottom" ).on("click", toBottom);
 
 $( ".myButton" ).css({"border": "1px solid grey", "padding": "3px", "margin": "5px 5px 5px 0px", "font-weight": "", "width": "20px", "color": "black", "float": "left"});
 
-// *** AJAX ***
-function isKeywordFull(bug, keyword) {
-		$('<div>').load("https://bugzilla.abra.eu/show_bug.cgi?id=" + bug + " #bugzilla-body", function(){
+// *** Jméno bugu v patičce ***
+var myName = $( "#short_desc_nonedit_display" ).text();
+var myBugNumber = $( "div.bz_short_desc_container > a" ).text();
+$( "#useful-links").before( "<div id='myName' style='padding: 5px; font-weight: bold; margin: 5px; background-color: #d0d0d0; border-radius: 5px'></div>" );
+$( "#myName" ).text(myBugNumber + " - " + myName);
+
+// *** Doplnění ikon k bugům v sekci See Also ***
+// *** Funkce využívající AJAX pro přidělení symbolů k bugům v závislosti na jejich vztahu k dokumentaci ***
+function bugMarker(bug) {
+	var outerThis = this;
+	$('<div>').load("https://bugzilla.abra.eu/show_bug.cgi?id=" + bug + " #bugzilla-body", function(){
 		var myStatus = $(this).find( "#static_bug_status").text();
 		var myKeywords = $(this).find( "#keywords").val();
 		var myToHelp = $(this).find( "select[title^='Zda se má zveřejnit do helpu'] > option[selected='']" ).text();
@@ -198,32 +207,30 @@ function isKeywordFull(bug, keyword) {
 		if (isVerified == true) {
 			if (myToHelp == "+") {
 				if (isInHelp == true) {
-					$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/check_mark_standard.png'></img>" )
+					$(outerThis).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/check_mark_standard.png'></img>" )
 				} else {
-					$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/green_dot.png'></img>" )
+					$(outerThis).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/green_dot.png'></img>" )
 				};
 			} else if (myToHelp == "-") {
-				$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross_green.png'></img>" )
+				$(outerThis).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross_green.png'></img>" )
 			} else if (myToHelp == "?") {
-				$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/questionmark.png'></img>" )
+				$(outerThis).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/questionmark.png'></img>" )
 			} else if (myToHelp == "") {
-				$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/questionmark.png'></img>" )
+				$(outerThis).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/questionmark.png'></img>" )
 			};
 		} else if (isWontfix == true) {
-			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross.png'></img>" );
+			$(outerThis).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross.png'></img>" );
 		} else if (isInvalid == true) {
-			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross.png'></img>" );
+			$(outerThis).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross.png'></img>" );
 		} else if (isDuplicate == true) {
-			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross.png'></img>" );
+			$(outerThis).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/cross.png'></img>" );
 		} else {
-			$("#" + bug).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/red_dot.png'></img>" );
+			$(outerThis).after( "<img style=\"padding-left:5px\" height=\"10\" width=\"10\" src='https://help.abra.eu/icons/red_dot.png'></img>" );
 		};
 	});
-};
+}
 
 $( "#field_container_see_also ul li a" ).each(function() {
-  		var myBug = $( this ).text();
-		$( this ).attr("id", myBug);
-		console.log( myBug );
-		isKeywordFull( myBug, "InHelp" );
+  		var thisBug = $(this).text();
+		bugMarker.call(this, thisBug);
 });
