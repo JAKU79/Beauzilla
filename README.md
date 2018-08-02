@@ -4,6 +4,10 @@ Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Docu
 
 ZMĚNY
 -----
+1.0.5
+- upraven mechanismus označování bugů. Nyní již nebude docházet k vícenásobnému označování jednoho bugu, pokud se tento bug vyskytne ve výběru vícekrát, a naopak se nyní jeho další výskyty již také označí. Vyřešeno metodou call().
+- doplnení čísla a názvu bugu do patičky
+
 1.0.4
 - AJAX: doplněny symboly pro všechny relevantní stavy bugů z pohledu dokumentace. Zatím jen v sekci See Also.
 - opravena chyba v součtu sumComHelp
