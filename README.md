@@ -4,6 +4,9 @@ Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Docu
 
 ZMĚNY
 -----
+1.0.6
+- doplnění tlačítek + a - pro rychlé nastavení flagu toHelp.
+
 1.0.5
 - upraven mechanismus označování bugů. Nyní již nebude docházet k vícenásobnému označování jednoho bugu, pokud se tento bug vyskytne ve výběru vícekrát, a naopak se nyní jeho další výskyty již také označí. Vyřešeno metodou call().
 - doplnení čísla a názvu bugu do patičky
