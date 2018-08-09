@@ -167,7 +167,7 @@ for (m = 0; m < lenSum; m++) {
 	};
 }
 
-// *** Tlačítka pro skok na začátek a na konec stránky ***
+// *** Tlačítka ***
 function toBottom() {
 	var scrollingElement = (document.scrollingElement || document.body);
 	scrollingElement.scrollTop = scrollingElement.scrollHeight;
@@ -177,13 +177,40 @@ function toTop() {
 	$(window).scrollTop(0);
 }
 
+function toHelpYes() {
+	// $("#flags").find( "select[title^='Zda se má zveřejnit do helpu'] > option[value='+']" ).toggleClass("selected").change();
+	$("#flags").find( "select[title^='Zda se má zveřejnit do helpu']" ).val("+");
+	$("#flags").find( "select[title^='Zda se má zveřejnit do helpu']" ).parent().parent().parent().removeClass("bz_flag_type bz_default_hidden");
+}
+
+function toHelpNo() {
+	// $("#flags").find( "select[title^='Zda se má zveřejnit do helpu'] > option[value='-']" ).toggleClass("selected").change();
+	$("#flags").find( "select[title^='Zda se má zveřejnit do helpu']" ).val("-");
+	$("#flags").find( "select[title^='Zda se má zveřejnit do helpu']" ).parent().parent().parent().removeClass("bz_flag_type bz_default_hidden");
+}
+
 $( "#InHelp").after( "<div id='toTop'><img class='myButton' src='https://help.abra.eu/icons/arrow_up.png'></img></div>" );
 $( "#toTop" ).on("click", toTop);
 
 $( "#toTop").after( "<div id='toBottom'><img class='myButton' src='https://help.abra.eu/icons/arrow_down.png'></img></div>" );
 $( "#toBottom" ).on("click", toBottom);
 
+$( "#toBottom").after( "<div id='toHelpYes'><img class='myButton' src='https://help.abra.eu/icons/plus.png'></img></div>" );
+$( "#toHelpYes" ).on("click", toHelpYes);
+
+$( "#toHelpYes").after( "<div id='toHelpNo'><img class='myButton' src='https://help.abra.eu/icons/minus.png'></img></div>" );
+$( "#toHelpNo" ).on("click", toHelpNo);
+
 $( ".myButton" ).css({"border": "1px solid grey", "padding": "3px", "margin": "5px 5px 5px 0px", "font-weight": "", "width": "20px", "color": "black", "float": "left"});
+$( ".myButtonText" ).css({"border": "1px solid grey", "padding": "3px", "margin": "5px 5px 5px 0px", "font-weight": "", "width": "60px","height": "20px", "color": "black", "float": "left"});
+
+$( ".myButton" ).mouseenter(function(){
+	$( this ).css({"box-shadow":"1px 1px 5px #585858", "background-color":""});
+});
+
+$( ".myButton" ).mouseleave(function(){
+	$( this ).css({"box-shadow":"","background-color":""});
+});
 
 // *** Jméno bugu v patičce ***
 var myName = $( "#short_desc_nonedit_display" ).text();
