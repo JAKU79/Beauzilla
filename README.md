@@ -4,6 +4,9 @@ Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Docu
 
 ZMĚNY
 -----
+1.0.8
+- oprava chyby, kdy tlačítko pro Published-04 doplňovalo pouze Published.
+
 1.0.7
 - větší kompaktnost patičky (přestylování links-action)
 - refaktorizace kódu
