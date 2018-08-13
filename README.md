@@ -4,6 +4,14 @@ Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Docu
 
 ZMĚNY
 -----
+1.0.7
+- větší kompaktnost patičky (přestylování links-action)
+- refaktorizace kódu
+- zavedení čitelnější struktury
+- automatické nastavení položky typ, pokud nastaven není a je mezi keywordy
+- doplnění tlačítek pro přidání keywordů InHelp, Reviewed a Published
+- tlačítka upravena na vícestavová
+
 1.0.6
 - doplnění tlačítek + a - pro rychlé nastavení flagu toHelp.
 
