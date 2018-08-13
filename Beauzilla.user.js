@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beauzilla
 // @namespace    http://tampermonkey.net/
-// @version      1.0.7
+// @version      1.0.8
 // @description  Stylování Bugzilly
 // @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
@@ -431,7 +431,7 @@ if (myKeywords.includes("Published")) {
 }
 
 $("#setPublished").click(function() {
-	myKeywordButton("Published", "setPublished", "rocket.png", "rocketGray.png");
+	myKeywordButton("Published-04", "setPublished", "rocket.png", "rocketGray.png");
 });
 
 $(".myButton").css({"border": "1px solid grey", "padding": "3px", "margin": "5px 5px 5px 0px", "font-weight": "", "width": "20px", "color": "black", "float": "left"});
