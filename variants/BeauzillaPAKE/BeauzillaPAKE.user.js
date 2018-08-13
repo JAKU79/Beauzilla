@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         Beauzilla PAKE
+// @name         Beauzilla PAKE Devel
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  Stylování Bugzilly pro PAKE
-// @updateURL    https://github.com/JAKU79/Beauzilla/variants/BeauzillaPAKE/raw/master/BeauzillaPAKE.user.js
-// @downloadURL  https://github.com/JAKU79/Beauzilla/variants/BeauzillaPAKE/raw/master/BeauzillaPAKE.user.js
+// @version      1.0.1
+// @description  Stylování Bugzilly
+// @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/variants/BeauzillaPAKE/BeauzillaPAKE.user.js
+// @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/variants/BeauzillaPAKE/BeauzillaPAKE.user.js
 // @author       Jan Kusák
 // @grant        none
 // @match        https://bugzilla.abra.eu/show_bug.cgi*
@@ -19,21 +19,28 @@ function blink_text() {
 
 setInterval(blink_text, 1000);
 
-// *** Barva horní položky Status ***
-if( $( "span#static_bug_status:contains('VERIFIED')" ).length > 0) {
-    $( "span#static_bug_status" ).css({"color": "#17984e", "font-weight": "bold"});
+// Barva položky Status umístěné v horní čáti bugzilla-body
+var topStatusHtml = $("span#static_bug_status").html();
+var topStatusLeftBracketPosition;
+
+if (topStatusHtml.includes("DUPLICATE")) {
+	topStatusLeftBracketPosition = topStatusHtml.indexOf("of");
 } else {
-    $( "span#static_bug_status" ).css({"color": "red", "font-weight": "bold"});
-};
+	topStatusLeftBracketPosition = topStatusHtml.indexOf("(");
+}
+var topStatusLeftSlice = topStatusHtml.slice(0, topStatusLeftBracketPosition);
+var topStatusRightSlice = topStatusHtml.slice(topStatusLeftBracketPosition, topStatusHtml.length);
 
-// *** Barví komentáře, které mají tagy help nebo tohelp. ***
-$( "span:contains('Comment hidden (help)')" ).parents( ".bz_comment" ).css( "background-color", "khaki" );
-$( "span:contains('tohelp')" ).parents( ".bz_comment" ).css( "background-color", "lightblue" );
+$("span#static_bug_status").html("<span id='topStatus' style=''>"
+								 +topStatusLeftSlice+"</span>"+topStatusRightSlice);
 
-// *** Barví tag inhelp. ***
-$( "span:contains('inhelp')" ).css( "background-color", "#cdf2ba" );
+if (topStatusLeftSlice.includes("VERIFIED")) {
+	$("#topStatus").css({"font-size":"11px","background-color":"#359b35","color":"white","padding":"3px 2px 3px 7px","border-radius":"6px","margin-right":"5px"});
+} else {
+	$("#topStatus").css({"font-size":"11px","background-color":"#b83333","color":"white","padding":"3px 2px 3px 7px","border-radius":"6px","margin-right":"5px"});
+}
 
-// *** Zobrazuje ikony pro keywordy L10N_SK, L10N_CZ, L10N_CH, Reviewed, Published, InHelp a HelpInProcess. ***
+// *** Zobrazuje ikony pro keywordy L10N_SK, L10N_CZ, L10N_CH***
 function oKey(keyword, icon, height, width) {
     this.keyword = keyword;
     this.icon = icon;
@@ -44,12 +51,8 @@ function oKey(keyword, icon, height, width) {
 var myKey1 = new oKey("L10N_SK", "Flag_of_Slovakia.svg", 15, 20);
 var myKey2 = new oKey("L10N_CZ", "Flag_of_the_Czech_Republic.svg", 15, 20);
 var myKey3 = new oKey("L10N_CH", "Flag_of_Switzerland.svg", 15, 15);
-var myKey4 = new oKey("InHelp", "InHelp.svg", 15, 15);
-var myKey5 = new oKey("HelpInProcess", "in_process.png", 15, 15);
-var myKey6 = new oKey("Reviewed", "magnifying-glass1.png", 15, 15);
-var myKey7 = new oKey("Published", "rocket_red1_cut.png", 15, 15);
 
-var arrKey = [myKey1, myKey2, myKey3, myKey4, myKey5, myKey6, myKey7];
+var arrKey = [myKey1, myKey2, myKey3];
 var lenKey = arrKey.length;
 var i;
 
@@ -61,11 +64,11 @@ for (i = 0; i < lenKey ; i++) {
 			   + arrKey[i].width + "\"></td>" );
 };
 
-// *** Barva borderů položky Typ ***
+// Barva okrajů položky Typ
 function oType(type, color) {
     this.type = type;
     this.color = color;
-};
+}
 
 var myType1 = new oType("Error (chyba)", "#ff9933");
 var myType2 = new oType("---", "#ff0000");
@@ -79,7 +82,7 @@ var j;
 
 for (j = 0; j < lenType ; j++) {
 	$("#cf_statistictype option[value=\"" + arrType[j].type + "\"][selected='selected']").parent().css({"border-color": arrType[j].color, "border-width": "2px"});
-};
+}
 
 // *** Barva textu pro flag ToHelp a ToPubl v závislosti na hodnotě ***
 function oFlagValue(value, color) {
@@ -91,7 +94,7 @@ var myFlagValue1 = new oFlagValue("+", "#009933");
 var myFlagValue2 = new oFlagValue("-", "red");
 var myFlagValue3 = new oFlagValue("?", "#cc00cc");
 
-var arrFlag = ["ToHelp", "ToPubl"];
+var arrFlag = ["ToPubl"];
 var arrFlagValue = [myFlagValue1, myFlagValue2, myFlagValue3];
 
 var lenFlag = arrFlag.length;
@@ -104,32 +107,88 @@ for (l = 0; l < lenFlag ; l++) {
 	for (k = 0; k < lenFlagValue ; k++) {
 		$("option[value=\"" + arrFlagValue[k].value + "\"][selected]:contains(\"" + arrFlagValue[k].value + "\")").parent().parent().prev().children( "label:contains(\"" + arrFlag[l] + "\")" ).css({"color": arrFlagValue[k].color, "font-weight": "bold"});
 	};
-};
-
-// *** footer s uloženými definicemi hledání je umístěn po leve straně jako plovoucí ***
-$( "#footer" ).css({"position":"fixed", "top": "0px", "width": "300px"});
-$( "#bugzilla-body" ).css({"position": "absolute", "left": "335px", "width": "auto"});
-$( "#footer ul li" ).css({"display": "block"});
-$( "span:contains('| ')" ).empty();
-$( ".form").css({"padding-top": "4px", "padding-bottom": "4px"});
 
 // *** nastavení šířky těla ***
 $( "#bugzilla-body" ).css({"max-width": "1100px"});
+};
 
 // *** odstranění hlavičky ***
 $( "#header" ).empty();
 
-// *** odstranění tabulky pro výkaz hodin ***
-// $( ".bz_time_tracking_table" ).empty();
-
 // *** odstranění řádku s harwarem ***
 $( "#field_label_rep_platform").parent().empty();
 
-// *** přestylování patičky ***
-$( "#footer").css({"background": "#f0f0f0", "color": "black"});
-$( "div#footer a").css({"color": "#6070cf", "text-decoration": "underline"});
-$( "div#footer a:visited").css({"color": "#636", "text-decoration": "underline"});
-$( "div#footer li#links-actions").css({"font-weight": "bold"});
+// *** 2.0 ***
+// FOOTER
+
+// *** 2.1 ***
+// Obecné úpravy včetně nastavení patičky jako float a sticky
+$("#footer #links-actions .links li").css({"display": "inline"});
+$("#footer form").css({"margin-top": "5px"});
+$("#footer").css({"position":"fixed", "top": "0px", "width": "300px", "height":"auto","overflow":"auto"});
+$("#bugzilla-body").css({"position": "absolute", "left": "335px", "width": "auto"});
+$("#footer #links-saved .links li").css({"display": "block"});
+$("#footer #links-shared .links li").css({"display": "block"});
+$("span:contains('| ')").empty();
+$(".form").css({"padding-top": "4px", "padding-bottom": "4px"});
+$("#footer").css({"background": "#f0f0f0", "color": "black"});
+$("div#footer a").css({"color": "#6070cf", "text-decoration": "underline"});
+$("div#footer a:visited").css({"color": "#636", "text-decoration": "underline"});
+
+// *** 2.2 ***
+// Umístění čísla a název bugu do horní části
+var myName = $("#short_desc_nonedit_display").text();
+var myBugNumber = $("div.bz_short_desc_container > a").text();
+$("#useful-links").before( "<div id='myName' style='padding: 5px; font-weight: bold; margin: 5px; background-color: #d0d0d0; border-radius: 5px'></div>");
+$("#myName").text(myBugNumber + " - " + myName);
+
+// *** 2.3 ***
+// LINKS-ACTION
+
+// **** 2.3.1 ***
+// Skrytí původní sekce
+$("#footer #useful-links #links-actions").hide();
+
+// *** 2.3.2 ***
+// Uložení formuláře pro hledání do proměnné linksActionSearchForm obaleného tagem p. Je to z důvodu,
+// abych při vkládání nemusel nastavovat původní atributy formuláře.
+var linksActionSearchForm = $("#footer #useful-links #links-actions ul li form").wrap('<p/>').parent().html();
+
+// *** 2.3.4 ***
+// uložení links-action do pole arrLinksAction
+var linksActionLength = $("#footer #useful-links #links-actions ul li").length;
+var arrLinksAction = [];
+var p;
+for (p = 0; p < linksActionLength; p++) {
+	let text = $("#footer #useful-links #links-actions ul li:eq("+p+") a").text(); // Vyberu text ...
+	let link = $("#footer #useful-links #links-actions ul li:eq("+p+") a").prop("href"); // ... vyberu odkaz ...
+	arrLinksAction.push("<a href='"+link+"'style='color: rgb(96, 112, 207); text-decoration: underline;'>"+text+"</a>"); // ... a při vkládání do pole obalím text a odkaz původním stylem atributu a.
+}
+
+// *** 2.3.5 ***
+// vložení formuláře hledání za název bugu [#myName viz 2.2]
+linksActionSearchForm = $(linksActionSearchForm).wrap("<div id='searchForm' />").parent();
+$("#myName").after(linksActionSearchForm);
+$("#searchForm").css({"padding": "10px 0px 0px 05px"});
+$("#quicksearch_bottom").css({"margin-left":"", "width": ""});
+$("#searchForm").append("<span style='margin-left:5px;font-weight:bold'>" + arrLinksAction[4] + "</span>"); // prvek [?]
+
+// *** 2.3.6
+// vložení #links-action za formulář s hledáním [#searchForm viz 2.3.5]
+$("#searchForm").after("<div id='arrLinksAction'></div>")
+$("#arrLinksAction").append(arrLinksAction[0] + " ▪ "
+							  + arrLinksAction[1] + " ▪ "
+							  + arrLinksAction[2] + " ▪ "
+							  + arrLinksAction[3] + " ▪ "
+							  + arrLinksAction[5] + " ▪ "
+							  + arrLinksAction[6] + " ▪ "
+							  + arrLinksAction[7] + " ▪ "
+							  + arrLinksAction[8] + " ▪ "
+							  + arrLinksAction[9] + " ▪ "
+							  + arrLinksAction[10]
+							 );
+
+$("#arrLinksAction").css({"padding-top": "10px", "font-weight": "bold", "margin-left":"5px"});
 
 //  *** Součet tagů inhelp, tohelp a help. Vypíší se v levém plovoucím divu. ***
 var sumCom = $(".bz_comment").length - 1;
@@ -178,12 +237,6 @@ $( "#toTop").after( "<div id='toBottom'><img class='myButton' src='https://help.
 $( "#toBottom" ).on("click", toBottom);
 
 $( ".myButton" ).css({"border": "1px solid grey", "padding": "3px", "margin": "5px 5px 5px 0px", "font-weight": "", "width": "20px", "color": "black", "float": "left"});
-
-// Jméno bugu v patičc
-var myName = $( "#short_desc_nonedit_display" ).text();
-var myBugNumber = $( "div.bz_short_desc_container > a" ).text();
-$( "#useful-links").before( "<div id='myName' style='padding: 5px; font-weight: bold; border: solid 1px black; margin: 5px'>" + myName + "</div>" );
-$( "#myName" ).before( "<div id='myBugNumber' style='padding: 5px; margin-top: 5px; font-weight: bold; text-align: center; font-size: 16px'>" + myBugNumber + "</div>" );
 
 // *** AJAX ***
 // Funkce pro označení elementu s id čísla bugu, pokud je ve stavu VERIFIED
