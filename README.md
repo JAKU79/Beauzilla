@@ -4,6 +4,12 @@ Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Docu
 
 ZMĚNY
 -----
+1.0.9
+- doplnění efektu blikání na položku Typ, pokud je "---".
+- oprava chyby v přidělování Typu Development v závislosti na keywordu
+- tlačítko Published (raketa) přidává nyní keyword Published-05
+- v sekcích Depends on a Blocks se nyní bugy značí stejně jako v sekci See also.
+
 1.0.8
 - oprava chyby, kdy tlačítko pro Published-04 doplňovalo pouze Published.
 
