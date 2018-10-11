@@ -1,8 +1,10 @@
 // ==UserScript==
-// @name         Beauzilla Devel
+// @name         Beauzilla
 // @namespace    http://tampermonkey.net/
 // @version      1.0.9
 // @description  Stylování Bugzilly
+// @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
+// @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @author       Jan Kusák
 // @grant        none
 // @match        https://bugzilla.abra.eu/show_bug.cgi*
@@ -14,8 +16,6 @@
 
 // ÚLOŽIŠTĚ IKON
 // https://help.abra.eu/icons/
-
-console.time();
 
 // *** F.0 **
 // UNIVERZÁLNÍ FUNKCE
@@ -460,5 +460,3 @@ $(".myButton").mouseenter(function(){
 $(".myButton").mouseleave(function(){
 	$( this ).css({"box-shadow":""});
 });
-
-console.timeEnd();
