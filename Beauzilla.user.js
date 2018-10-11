@@ -1,15 +1,21 @@
 // ==UserScript==
-// @name         Beauzilla
+// @name         Beauzilla Devel
 // @namespace    http://tampermonkey.net/
-// @version      1.0.8
+// @version      1.0.9
 // @description  Stylování Bugzilly
-// @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
-// @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @author       Jan Kusák
 // @grant        none
 // @match        https://bugzilla.abra.eu/show_bug.cgi*
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // ==/UserScript==
+
+// TESTOVACÍ BUG
+// https://bugzilla.abra.eu/show_bug.cgi?id=54627
+
+// ÚLOŽIŠTĚ IKON
+// https://help.abra.eu/icons/
+
+console.time();
 
 // *** F.0 **
 // UNIVERZÁLNÍ FUNKCE
@@ -176,12 +182,13 @@ if ( setType == "---" ) {
 		} else if ( myKeywords.includes("Legislation") == true ) {
 			$("#cf_statistictype").val("Legislation (legislativa)");
 		} else if ( myKeywords.includes("Development") == true ) {
-			$("#cf_statistictype").val("Development (rozvoj))");
+			$("#cf_statistictype").val("Development (rozvoj)");
 		} else if ( myKeywords.includes("Improvement") == true ) {
 			$("#cf_statistictype").val("Improvement (zlepšení)");
 		} else if ( myKeywords.includes("Overhead") == true ) {
 			$("#cf_statistictype").val("Overhead (režie)");
 		} else {
+			$("#cf_statistictype").addClass("blink");
 			// $("#cf_statistictype").val("Error (chyba)");
 		}
 }
@@ -219,6 +226,13 @@ $("#field_container_see_also ul li a").each(function() {
 		bugMarker.call(this, thisBug);
 });
 
+// *** 1.12 ***
+// informační ikony u bugů v sekcích Depends on a Blocks
+$("#bz_show_bug_column_1 a").each(function() {
+  		var thisBug = $(this).text();
+		bugMarker.call(this, thisBug);
+});
+
 // *** 2.0 ***
 // FOOTER
 
@@ -226,7 +240,7 @@ $("#field_container_see_also ul li a").each(function() {
 // Obecné úpravy včetně nastavení patičky jako float a sticky
 $("#footer #links-actions .links li").css({"display": "inline"});
 $("#footer form").css({"margin-top": "5px"});
-$("#footer").css({"position":"fixed", "top": "0px", "width": "300px", "height":"auto","overflow":"auto"});
+$("#footer").css({"position":"fixed", "top": "0px", "width": "300px", "height":"auto","resize":"both","overflow":"auto"});
 $("#bugzilla-body").css({"position": "absolute", "left": "335px", "width": "auto"});
 $("#footer #links-saved .links li").css({"display": "block"});
 $("#footer #links-shared .links li").css({"display": "block"});
@@ -431,8 +445,10 @@ if (myKeywords.includes("Published")) {
 }
 
 $("#setPublished").click(function() {
-	myKeywordButton("Published-04", "setPublished", "rocket.png", "rocketGray.png");
+	myKeywordButton("Published-05", "setPublished", "rocket.png", "rocketGray.png");
 });
+
+/* $("#setPublished").after( "<div id='save'><form name='changeform' id='changeform' method='post' action='process_bug.cgi'><div class='bz_short_desc_container edit_form'><div class='knob-buttons'><input type='submit' value='Save' id='commit'><div></div></form></div>");*/
 
 $(".myButton").css({"border": "1px solid grey", "padding": "3px", "margin": "5px 5px 5px 0px", "font-weight": "", "width": "20px", "color": "black", "float": "left"});
 $(".myButtonText").css({"border": "1px solid grey", "padding": "3px", "margin": "5px 5px 5px 0px", "font-weight": "", "width": "60px","height": "20px", "color": "black", "float": "left"});
@@ -444,3 +460,5 @@ $(".myButton").mouseenter(function(){
 $(".myButton").mouseleave(function(){
 	$( this ).css({"box-shadow":""});
 });
+
+console.timeEnd();
