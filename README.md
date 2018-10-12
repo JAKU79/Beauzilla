@@ -4,6 +4,9 @@ Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Docu
 
 ZMĚNY
 -----
+1.0.11
+- vylepšeno parserování bugů Depends on a Blocks, tj. zvýšena rychlost přidělování "semaforků".
+
 1.0.10
 - opravena hlavička a odstraněny nepotřebné řásti kódu
 
