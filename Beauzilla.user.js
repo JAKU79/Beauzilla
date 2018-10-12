@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beauzilla
 // @namespace    http://tampermonkey.net/
-// @version      1.0.10
+// @version      1.0.11
 // @description  Stylování Bugzilly
 // @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
