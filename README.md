@@ -4,6 +4,9 @@ Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Docu
 
 ZMĚNY
 -----
+1.0.10
+- opravena hlavička a odstraněny nepotřebné řásti kódu
+
 1.0.9
 - doplnění efektu blikání na položku Typ, pokud je "---".
 - oprava chyby v přidělování Typu Development v závislosti na keywordu
