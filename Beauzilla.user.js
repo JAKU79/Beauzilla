@@ -228,7 +228,7 @@ $("#field_container_see_also ul li a").each(function() {
 
 // *** 1.12 ***
 // informační ikony u bugů v sekcích Depends on a Blocks
-$("#bz_show_bug_column_1 a").each(function() {
+$("#bz_show_bug_column_1 a.bz_bug_link").each(function() {
   		var thisBug = $(this).text();
 		bugMarker.call(this, thisBug);
 });
