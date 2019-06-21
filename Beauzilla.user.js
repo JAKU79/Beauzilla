@@ -1,10 +1,8 @@
 // ==UserScript==
-// @name         Beauzilla
+// @name         Beauzilla Devel
 // @namespace    http://tampermonkey.net/
-// @version      1.0.11
+// @version      1.1.0
 // @description  Stylování Bugzilly
-// @updateURL    https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
-// @downloadURL  https://github.com/JAKU79/Beauzilla/raw/master/Beauzilla.user.js
 // @author       Jan Kusák
 // @grant        none
 // @match        https://bugzilla.abra.eu/show_bug.cgi*
@@ -27,7 +25,7 @@ function bugMarker(bug) {
 	$("<div>").load("https://bugzilla.abra.eu/show_bug.cgi?id=" + bug + " #bugzilla-body", function(){
 		var myStatus = $(this).find( "#static_bug_status").text();
 		var myKeywords = $(this).find( "#keywords").val();
-		var myToHelp = $(this).find( "select[title^='Zda se má zveřejnit do helpu'] > option[selected='']").text();
+		var myToHelp = $(this).find( "select[title^='Zda se má zveřejnit do on-line helpu'] > option[selected='']").text();
 		var isVerified = myStatus.includes("VERIFIED");
 		var isWontfix = myStatus.includes("WONTFIX");
 		var isInvalid = myStatus.includes("INVALID");
@@ -354,15 +352,15 @@ function toTop() {
 }
 
 function toHelpYes() {
-	$("#flags").find( "select[title^='Zda se má zveřejnit do helpu']").val("+");
-	$("#flags").find( "select[title^='Zda se má zveřejnit do helpu']").parent().parent().parent().removeClass("bz_flag_type bz_default_hidden");
+	$("#flags").find( "select[title^='Zda se má zveřejnit do on-line helpu']").val("+");
+	$("#flags").find( "select[title^='Zda se má zveřejnit do on-line helpu']").parent().parent().parent().removeClass("bz_flag_type bz_default_hidden");
 	$("#toHelpNo").find("img").attr("src", "https://help.abra.eu/icons/minusGray.png");
 	$("#toHelpYes").find("img").attr("src", "https://help.abra.eu/icons/plus.png");
 }
 
 function toHelpNo() {
-	$("#flags").find( "select[title^='Zda se má zveřejnit do helpu']").val("-");
-	$("#flags").find( "select[title^='Zda se má zveřejnit do helpu']").parent().parent().parent().removeClass("bz_flag_type bz_default_hidden");
+	$("#flags").find( "select[title^='Zda se má zveřejnit do on-line helpu']").val("-");
+	$("#flags").find( "select[title^='Zda se má zveřejnit do on-line helpu']").parent().parent().parent().removeClass("bz_flag_type bz_default_hidden");
 	$("#toHelpYes").find("img").attr("src", "https://help.abra.eu/icons/plusGray.png");
 	$("#toHelpNo").find("img").attr("src", "https://help.abra.eu/icons/minus.png");
 }
@@ -445,7 +443,7 @@ if (myKeywords.includes("Published")) {
 }
 
 $("#setPublished").click(function() {
-	myKeywordButton("Published-05", "setPublished", "rocket.png", "rocketGray.png");
+	myKeywordButton("Published-06", "setPublished", "rocket.png", "rocketGray.png");
 });
 
 /* $("#setPublished").after( "<div id='save'><form name='changeform' id='changeform' method='post' action='process_bug.cgi'><div class='bz_short_desc_container edit_form'><div class='knob-buttons'><input type='submit' value='Save' id='commit'><div></div></form></div>");*/
