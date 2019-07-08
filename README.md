@@ -4,6 +4,9 @@ Skript upravuje vzled bugů na https://bugzilla.abra.eu/ pro potřeby teamu Docu
 
 ZMĚNY
 -----
+1.1.1
+- opravena chyba nezvýrazňování uživatelských tlačítek + a -.
+
 1.1.0
 - upraveno tlačítka pro flag ToHelp po změně jeho popisku
 - tlačítko rakety nyní doplní keyword Published-06
