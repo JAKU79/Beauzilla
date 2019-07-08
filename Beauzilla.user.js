@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beauzilla Devel
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.1.1
 // @description  Stylování Bugzilly
 // @author       Jan Kusák
 // @grant        none
@@ -400,7 +400,7 @@ $("#toTop").on("click", toTop);
 $("#toTop").after( "<div id='toBottom'><img class='myButton' src='https://help.abra.eu/icons/arrow_down.png'></img></div>");
 $("#toBottom").on("click", toBottom);
 
-var toHelpVal = $("#flags").find( "select[title^='Zda se má zveřejnit do helpu']").val();
+var toHelpVal = $("#flags").find( "select[title^='Zda se má zveřejnit do on-line helpu']").val();
 
 if (toHelpVal == "+") {
 	$("#toBottom").after( "<div id='toHelpYes'><img class='myButton' src='https://help.abra.eu/icons/plus.png'></img></div>");
